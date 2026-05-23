@@ -1,4 +1,6 @@
 """Data migration: create default Customer / Manager / Staff groups."""
+from django.apps import apps as django_apps
+from django.contrib.auth.management import create_permissions
 from django.db import migrations
 
 
@@ -67,6 +69,16 @@ GROUPS = {
 
 
 def create_default_groups(apps, schema_editor):
+    # Django auto-creates Permission rows via the post_migrate signal,
+    # but we run before that fires. Force creation for the apps we touch
+    # so our permission lookups below actually find rows.
+    for app_label in ("books", "orders", "users"):
+        try:
+            app_config = django_apps.get_app_config(app_label)
+        except LookupError:
+            continue
+        create_permissions(app_config, apps=apps, verbosity=0)
+
     Group = apps.get_model("auth", "Group")
     Permission = apps.get_model("auth", "Permission")
     ContentType = apps.get_model("contenttypes", "ContentType")

@@ -59,17 +59,25 @@ class BookViewSet(viewsets.ModelViewSet):
         cache.set(cache_key, response.data, timeout=120)
         return response
 
+    @staticmethod
+    def _invalidate_list_cache():
+        # delete_pattern exists on django-redis; LocMemCache (tests) has only clear().
+        if hasattr(cache, "delete_pattern"):
+            cache.delete_pattern("projecta:books:list:*")
+        else:
+            cache.clear()
+
     def perform_update(self, serializer):
         super().perform_update(serializer)
-        cache.delete_pattern("projecta:books:list:*")
+        self._invalidate_list_cache()
 
     def perform_create(self, serializer):
         super().perform_create(serializer)
-        cache.delete_pattern("projecta:books:list:*")
+        self._invalidate_list_cache()
 
     def perform_destroy(self, instance):
         super().perform_destroy(instance)
-        cache.delete_pattern("projecta:books:list:*")
+        self._invalidate_list_cache()
 
     @action(detail=True, methods=["get"])
     def reviews(self, request, slug=None):
