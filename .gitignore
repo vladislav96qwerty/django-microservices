@@ -48,9 +48,10 @@ ENV/
 .env.local
 .env.*.local
 
-# IDE
+# IDE / editor local config
 .idea/
 .vscode/
+.claude/
 *.swp
 *.swo
 .DS_Store
