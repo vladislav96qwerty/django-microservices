@@ -1,0 +1,830 @@
+[
+  {
+    "model": "books.category",
+    "pk": 1,
+    "fields": {"name": "Programming", "slug": "programming"}
+  },
+  {
+    "model": "books.category",
+    "pk": 2,
+    "fields": {"name": "Fantasy", "slug": "fantasy"}
+  },
+  {
+    "model": "books.category",
+    "pk": 3,
+    "fields": {"name": "Fiction", "slug": "fiction"}
+  },
+  {
+    "model": "books.category",
+    "pk": 4,
+    "fields": {"name": "Technology", "slug": "technology"}
+  },
+  {
+    "model": "books.category",
+    "pk": 5,
+    "fields": {"name": "Science", "slug": "science"}
+  },
+  {
+    "model": "books.category",
+    "pk": 6,
+    "fields": {"name": "History", "slug": "history"}
+  },
+  {
+    "model": "books.category",
+    "pk": 7,
+    "fields": {"name": "Biography", "slug": "biography"}
+  },
+  {
+    "model": "books.category",
+    "pk": 8,
+    "fields": {"name": "Art", "slug": "art"}
+  },
+
+  {
+    "model": "books.author",
+    "pk": 1,
+    "fields": {
+      "name": "Eric Matthes",
+      "bio": "Author of Python Crash Course; high-school science and math teacher.",
+      "birth_date": null,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 2,
+    "fields": {
+      "name": "William S. Vincent",
+      "bio": "Django educator and author of several Django books.",
+      "birth_date": null,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 3,
+    "fields": {
+      "name": "J.R.R. Tolkien",
+      "bio": "English writer, philologist, and author of The Hobbit and The Lord of the Rings.",
+      "birth_date": "1892-01-03",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 4,
+    "fields": {
+      "name": "F. Scott Fitzgerald",
+      "bio": "American novelist of the Jazz Age, best known for The Great Gatsby.",
+      "birth_date": "1896-09-24",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 5,
+    "fields": {
+      "name": "Robert C. Martin",
+      "bio": "Software engineer known as 'Uncle Bob'; author of Clean Code.",
+      "birth_date": "1952-12-05",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 6,
+    "fields": {
+      "name": "Yuval Noah Harari",
+      "bio": "Israeli historian; author of Sapiens and Homo Deus.",
+      "birth_date": "1976-02-24",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 7,
+    "fields": {
+      "name": "Walter Isaacson",
+      "bio": "American biographer; wrote the official biography of Steve Jobs.",
+      "birth_date": "1952-05-20",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 8,
+    "fields": {
+      "name": "Daniel Kahneman",
+      "bio": "Psychologist and Nobel laureate; author of Thinking, Fast and Slow.",
+      "birth_date": "1934-03-05",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 9,
+    "fields": {
+      "name": "Frank Herbert",
+      "bio": "American science-fiction author best known for the Dune saga.",
+      "birth_date": "1920-10-08",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 10,
+    "fields": {
+      "name": "George Orwell",
+      "bio": "English novelist and essayist; author of 1984 and Animal Farm.",
+      "birth_date": "1903-06-25",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 11,
+    "fields": {
+      "name": "Ian Goodfellow",
+      "bio": "AI researcher; co-author of the Deep Learning textbook.",
+      "birth_date": null,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 12,
+    "fields": {
+      "name": "Sun Tzu",
+      "bio": "Ancient Chinese general and strategist credited with The Art of War.",
+      "birth_date": null,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 13,
+    "fields": {
+      "name": "Jared Diamond",
+      "bio": "American geographer and historian; author of Guns, Germs, and Steel.",
+      "birth_date": "1937-09-10",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 14,
+    "fields": {
+      "name": "Richard Dawkins",
+      "bio": "British evolutionary biologist; author of The Selfish Gene.",
+      "birth_date": "1941-03-26",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 15,
+    "fields": {
+      "name": "Tara Westover",
+      "bio": "American memoirist; author of Educated.",
+      "birth_date": "1986-09-27",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 16,
+    "fields": {
+      "name": "Michelle Obama",
+      "bio": "American attorney and former First Lady; author of Becoming.",
+      "birth_date": "1964-01-17",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 17,
+    "fields": {
+      "name": "Peter Thiel",
+      "bio": "American entrepreneur and investor; co-author of Zero to One.",
+      "birth_date": "1967-10-11",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 18,
+    "fields": {
+      "name": "Nir Eyal",
+      "bio": "Writer on the intersection of psychology, technology and business; author of Hooked.",
+      "birth_date": null,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 19,
+    "fields": {
+      "name": "Malcolm Gladwell",
+      "bio": "Canadian journalist and author of Outliers, Blink, and The Tipping Point.",
+      "birth_date": "1963-09-03",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 20,
+    "fields": {
+      "name": "Paulo Coelho",
+      "bio": "Brazilian novelist; author of The Alchemist.",
+      "birth_date": "1947-08-24",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 21,
+    "fields": {
+      "name": "Isaac Asimov",
+      "bio": "American writer and biochemist; author of the Foundation series.",
+      "birth_date": "1920-01-02",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 22,
+    "fields": {
+      "name": "William Gibson",
+      "bio": "American-Canadian writer; pioneer of cyberpunk and author of Neuromancer.",
+      "birth_date": "1948-03-17",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 23,
+    "fields": {
+      "name": "Ernest Cline",
+      "bio": "American novelist; author of Ready Player One.",
+      "birth_date": "1972-03-29",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "books.author",
+    "pk": 24,
+    "fields": {
+      "name": "Neal Stephenson",
+      "bio": "American writer of speculative fiction; author of Snow Crash and Cryptonomicon.",
+      "birth_date": "1959-10-31",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "books.book",
+    "pk": 1,
+    "fields": {
+      "title": "Python Crash Course",
+      "slug": "python-crash-course",
+      "isbn": "9781593279288",
+      "author": 1,
+      "categories": [1, 4],
+      "description": "A hands-on, project-based introduction to programming with Python.",
+      "cover": null,
+      "price": "650.00",
+      "stock": 5,
+      "pages": 544,
+      "language": "en",
+      "publication_date": "2019-05-03",
+      "is_active": true,
+      "created_at": "2026-02-23T17:56:20Z",
+      "updated_at": "2026-02-23T17:56:20Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 2,
+    "fields": {
+      "title": "Django for Beginners",
+      "slug": "django-for-beginners",
+      "isbn": "9781735467207",
+      "author": 2,
+      "categories": [1, 4],
+      "description": "A step-by-step introduction to building real-world web applications with Django.",
+      "cover": null,
+      "price": "720.00",
+      "stock": 3,
+      "pages": 320,
+      "language": "en",
+      "publication_date": "2022-08-15",
+      "is_active": true,
+      "created_at": "2026-02-23T17:56:20Z",
+      "updated_at": "2026-02-23T17:56:20Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 3,
+    "fields": {
+      "title": "The Hobbit",
+      "slug": "the-hobbit",
+      "isbn": "9780547928227",
+      "author": 3,
+      "categories": [2, 3],
+      "description": "Bilbo Baggins is swept into a quest to reclaim the Lonely Mountain from the dragon Smaug.",
+      "cover": null,
+      "price": "399.99",
+      "stock": 10,
+      "pages": 310,
+      "language": "en",
+      "publication_date": "1937-09-21",
+      "is_active": true,
+      "created_at": "2026-02-23T17:56:20Z",
+      "updated_at": "2026-02-23T17:56:20Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 4,
+    "fields": {
+      "title": "The Great Gatsby",
+      "slug": "the-great-gatsby",
+      "isbn": "9780743273565",
+      "author": 4,
+      "categories": [3],
+      "description": "A portrait of the Jazz Age in all of its decadence and excess.",
+      "cover": null,
+      "price": "50.28",
+      "stock": 31,
+      "pages": 180,
+      "language": "en",
+      "publication_date": "1925-04-10",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:45Z",
+      "updated_at": "2026-03-11T19:24:45Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 5,
+    "fields": {
+      "title": "Clean Code",
+      "slug": "clean-code",
+      "isbn": "9780132350884",
+      "author": 5,
+      "categories": [1, 4],
+      "description": "A handbook of agile software craftsmanship.",
+      "cover": null,
+      "price": "58.37",
+      "stock": 29,
+      "pages": 464,
+      "language": "en",
+      "publication_date": "2008-08-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:45Z",
+      "updated_at": "2026-03-11T19:24:45Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 6,
+    "fields": {
+      "title": "Sapiens: A Brief History of Humankind",
+      "slug": "sapiens",
+      "isbn": "9780062316097",
+      "author": 6,
+      "categories": [6, 5],
+      "description": "From the dawn of our species to the present, a brief history of humankind.",
+      "cover": null,
+      "price": "60.93",
+      "stock": 48,
+      "pages": 464,
+      "language": "en",
+      "publication_date": "2015-02-10",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:45Z",
+      "updated_at": "2026-03-11T19:24:45Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 7,
+    "fields": {
+      "title": "Steve Jobs",
+      "slug": "steve-jobs",
+      "isbn": "9781451648539",
+      "author": 7,
+      "categories": [7],
+      "description": "The exclusive biography of Apple co-founder Steve Jobs, based on more than forty interviews.",
+      "cover": null,
+      "price": "53.89",
+      "stock": 9,
+      "pages": 656,
+      "language": "en",
+      "publication_date": "2011-10-24",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:45Z",
+      "updated_at": "2026-03-11T19:24:45Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 8,
+    "fields": {
+      "title": "Thinking, Fast and Slow",
+      "slug": "thinking-fast-and-slow",
+      "isbn": "9780374533557",
+      "author": 8,
+      "categories": [5],
+      "description": "The two systems that drive the way we think, by Nobel laureate Daniel Kahneman.",
+      "cover": null,
+      "price": "16.49",
+      "stock": 38,
+      "pages": 499,
+      "language": "en",
+      "publication_date": "2011-10-25",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:45Z",
+      "updated_at": "2026-03-11T19:24:45Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 9,
+    "fields": {
+      "title": "Dune",
+      "slug": "dune",
+      "isbn": "9780441172719",
+      "author": 9,
+      "categories": [2, 3],
+      "description": "The classic science-fiction epic set on the desert planet Arrakis.",
+      "cover": null,
+      "price": "13.33",
+      "stock": 3,
+      "pages": 688,
+      "language": "en",
+      "publication_date": "1965-08-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 10,
+    "fields": {
+      "title": "1984",
+      "slug": "1984",
+      "isbn": "9780451524935",
+      "author": 10,
+      "categories": [3],
+      "description": "A dystopian social science fiction novel set in a totalitarian future.",
+      "cover": null,
+      "price": "41.95",
+      "stock": 20,
+      "pages": 328,
+      "language": "en",
+      "publication_date": "1949-06-08",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 11,
+    "fields": {
+      "title": "Deep Learning",
+      "slug": "deep-learning",
+      "isbn": "9780262035613",
+      "author": 11,
+      "categories": [4, 5],
+      "description": "A comprehensive introduction to the field of deep learning and its mathematical foundations.",
+      "cover": null,
+      "price": "13.00",
+      "stock": 44,
+      "pages": 800,
+      "language": "en",
+      "publication_date": "2016-11-18",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 12,
+    "fields": {
+      "title": "The Art of War",
+      "slug": "the-art-of-war",
+      "isbn": "9781599869773",
+      "author": 12,
+      "categories": [6],
+      "description": "An ancient Chinese treatise on military strategy.",
+      "cover": null,
+      "price": "48.23",
+      "stock": 41,
+      "pages": 273,
+      "language": "en",
+      "publication_date": "2009-01-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 13,
+    "fields": {
+      "title": "Guns, Germs, and Steel",
+      "slug": "guns-germs-and-steel",
+      "isbn": "9780393354324",
+      "author": 13,
+      "categories": [6, 5],
+      "description": "The fates of human societies, examined through geography and biology.",
+      "cover": null,
+      "price": "90.26",
+      "stock": 46,
+      "pages": 528,
+      "language": "en",
+      "publication_date": "1997-03-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 14,
+    "fields": {
+      "title": "The Selfish Gene",
+      "slug": "the-selfish-gene",
+      "isbn": "9780198788607",
+      "author": 14,
+      "categories": [5],
+      "description": "Evolution explained through the lens of the gene as the unit of selection.",
+      "cover": null,
+      "price": "42.52",
+      "stock": 2,
+      "pages": 360,
+      "language": "en",
+      "publication_date": "1976-01-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 15,
+    "fields": {
+      "title": "Educated",
+      "slug": "educated",
+      "isbn": "9780399590504",
+      "author": 15,
+      "categories": [7],
+      "description": "A memoir about a girl who, kept out of school, leaves her survivalist family and goes on to earn a PhD.",
+      "cover": null,
+      "price": "46.74",
+      "stock": 32,
+      "pages": 334,
+      "language": "en",
+      "publication_date": "2018-02-20",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 16,
+    "fields": {
+      "title": "Becoming",
+      "slug": "becoming",
+      "isbn": "9781524763138",
+      "author": 16,
+      "categories": [7],
+      "description": "Michelle Obama's deeply personal memoir.",
+      "cover": null,
+      "price": "59.63",
+      "stock": 45,
+      "pages": 448,
+      "language": "en",
+      "publication_date": "2018-11-13",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 17,
+    "fields": {
+      "title": "Zero to One",
+      "slug": "zero-to-one",
+      "isbn": "9780804139298",
+      "author": 17,
+      "categories": [4],
+      "description": "Notes on startups, or how to build the future.",
+      "cover": null,
+      "price": "32.17",
+      "stock": 3,
+      "pages": 224,
+      "language": "en",
+      "publication_date": "2014-09-16",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 18,
+    "fields": {
+      "title": "Hooked: How to Build Habit-Forming Products",
+      "slug": "hooked",
+      "isbn": "9781591847786",
+      "author": 18,
+      "categories": [4],
+      "description": "A guide to building products that keep users coming back.",
+      "cover": null,
+      "price": "85.57",
+      "stock": 42,
+      "pages": 256,
+      "language": "en",
+      "publication_date": "2014-11-04",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 19,
+    "fields": {
+      "title": "Outliers",
+      "slug": "outliers",
+      "isbn": "9780316017930",
+      "author": 19,
+      "categories": [5],
+      "description": "What makes high-achievers different? The story of success.",
+      "cover": null,
+      "price": "88.57",
+      "stock": 22,
+      "pages": 309,
+      "language": "en",
+      "publication_date": "2008-11-18",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 20,
+    "fields": {
+      "title": "The Alchemist",
+      "slug": "the-alchemist",
+      "isbn": "9780062315007",
+      "author": 20,
+      "categories": [3, 2],
+      "description": "An Andalusian shepherd's journey to find a worldly treasure leads to self-discovery.",
+      "cover": null,
+      "price": "36.90",
+      "stock": 25,
+      "pages": 197,
+      "language": "en",
+      "publication_date": "1988-01-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 21,
+    "fields": {
+      "title": "Foundation",
+      "slug": "foundation",
+      "isbn": "9780553293357",
+      "author": 21,
+      "categories": [2, 3],
+      "description": "The classic novel of the Foundation series — the rise of a galactic empire's successor.",
+      "cover": null,
+      "price": "27.61",
+      "stock": 3,
+      "pages": 244,
+      "language": "en",
+      "publication_date": "1951-05-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 22,
+    "fields": {
+      "title": "Neuromancer",
+      "slug": "neuromancer",
+      "isbn": "9780441569595",
+      "author": 22,
+      "categories": [2, 3, 4],
+      "description": "The novel that defined the cyberpunk genre.",
+      "cover": null,
+      "price": "55.14",
+      "stock": 1,
+      "pages": 271,
+      "language": "en",
+      "publication_date": "1984-07-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 23,
+    "fields": {
+      "title": "Ready Player One",
+      "slug": "ready-player-one",
+      "isbn": "9780307887443",
+      "author": 23,
+      "categories": [2, 3, 4],
+      "description": "In a dystopian 2045, the only escape from reality is the virtual utopia OASIS.",
+      "cover": null,
+      "price": "87.13",
+      "stock": 18,
+      "pages": 374,
+      "language": "en",
+      "publication_date": "2011-08-16",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 24,
+    "fields": {
+      "title": "Snow Crash",
+      "slug": "snow-crash",
+      "isbn": "9780553380958",
+      "author": 24,
+      "categories": [2, 3, 4],
+      "description": "Hiro Protagonist delivers pizzas in meatspace and hacks the Metaverse on the side.",
+      "cover": null,
+      "price": "12.85",
+      "stock": 32,
+      "pages": 480,
+      "language": "en",
+      "publication_date": "1992-06-01",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 25,
+    "fields": {
+      "title": "The Innovators",
+      "slug": "the-innovators",
+      "isbn": "9781476708706",
+      "author": 7,
+      "categories": [4, 6],
+      "description": "How a group of hackers, geniuses, and geeks created the digital revolution.",
+      "cover": null,
+      "price": "46.74",
+      "stock": 12,
+      "pages": 560,
+      "language": "en",
+      "publication_date": "2014-10-07",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 26,
+    "fields": {
+      "title": "Blink",
+      "slug": "blink",
+      "isbn": "9780316010665",
+      "author": 19,
+      "categories": [5],
+      "description": "The power of thinking without thinking — how snap judgments shape our world.",
+      "cover": null,
+      "price": "36.90",
+      "stock": 25,
+      "pages": 296,
+      "language": "en",
+      "publication_date": "2005-01-11",
+      "is_active": true,
+      "created_at": "2026-03-11T19:24:46Z",
+      "updated_at": "2026-03-11T19:24:46Z"
+    }
+  }
+]

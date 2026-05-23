@@ -1,0 +1,209 @@
+version: "3.9"
+
+services:
+  postgres_a:
+    image: postgres:16-alpine
+    container_name: postgres_a
+    environment:
+      POSTGRES_DB: ${PROJECTA_DB_NAME}
+      POSTGRES_USER: ${PROJECTA_DB_USER}
+      POSTGRES_PASSWORD: ${PROJECTA_DB_PASSWORD}
+    volumes:
+      - postgres_a_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PROJECTA_DB_USER} -d ${PROJECTA_DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - backend
+
+  postgres_b:
+    image: postgres:16-alpine
+    container_name: postgres_b
+    environment:
+      POSTGRES_DB: ${PROJECTB_DB_NAME}
+      POSTGRES_USER: ${PROJECTB_DB_USER}
+      POSTGRES_PASSWORD: ${PROJECTB_DB_PASSWORD}
+    volumes:
+      - postgres_b_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PROJECTB_DB_USER} -d ${PROJECTB_DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - backend
+
+  redis_a:
+    image: redis:7-alpine
+    container_name: redis_a
+    volumes:
+      - redis_a_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
+
+  redis_b:
+    image: redis:7-alpine
+    container_name: redis_b
+    volumes:
+      - redis_b_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
+
+  projecta:
+    build:
+      context: ./projecta
+      dockerfile: Dockerfile
+    container_name: projecta
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      postgres_a:
+        condition: service_healthy
+      redis_a:
+        condition: service_healthy
+    volumes:
+      - projecta_static:/app/staticfiles
+      - projecta_media:/app/media
+    expose:
+      - "8000"
+    networks:
+      - backend
+
+  projecta_celery:
+    build:
+      context: ./projecta
+      dockerfile: Dockerfile
+    container_name: projecta_celery
+    command: celery -A config worker -l info
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      - projecta
+      - redis_a
+    networks:
+      - backend
+
+  projecta_celery_beat:
+    build:
+      context: ./projecta
+      dockerfile: Dockerfile
+    container_name: projecta_celery_beat
+    command: celery -A config beat -l info
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      - projecta
+      - redis_a
+    networks:
+      - backend
+
+  projectb:
+    build:
+      context: ./projectb
+      dockerfile: Dockerfile
+    container_name: projectb
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      postgres_b:
+        condition: service_healthy
+      redis_b:
+        condition: service_healthy
+    volumes:
+      - projectb_static:/app/staticfiles
+    expose:
+      - "8001"
+    networks:
+      - backend
+
+  projectb_celery:
+    build:
+      context: ./projectb
+      dockerfile: Dockerfile
+    container_name: projectb_celery
+    command: celery -A config worker -l info
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      - projectb
+      - redis_b
+    networks:
+      - backend
+
+  projectb_celery_beat:
+    build:
+      context: ./projectb
+      dockerfile: Dockerfile
+    container_name: projectb_celery_beat
+    command: celery -A config beat -l info
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      - projectb
+      - redis_b
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    expose:
+      - "80"
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - projecta_static:/var/www/projecta/static:ro
+      - projecta_media:/var/www/projecta/media:ro
+      - projectb_static:/var/www/projectb/static:ro
+    depends_on:
+      - projecta
+      - projectb
+      - frontend
+    networks:
+      - backend
+
+volumes:
+  postgres_a_data:
+  postgres_b_data:
+  redis_a_data:
+  redis_b_data:
+  projecta_static:
+  projecta_media:
+  projectb_static:
+
+networks:
+  backend:
+    driver: bridge
