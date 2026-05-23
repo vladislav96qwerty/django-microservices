@@ -22,6 +22,11 @@ case "$1" in
         python manage.py migrate --noinput
         echo "Collecting static files..."
         python manage.py collectstatic --noinput || true
+
+        if [ "$BOOTSTRAP" = "1" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] && [ -n "$DJANGO_SUPERUSER_USERNAME" ]; then
+            echo "==> BOOTSTRAP=1: ensuring superuser '$DJANGO_SUPERUSER_USERNAME' exists..."
+            python manage.py createsuperuser --noinput || echo "  (superuser already exists)"
+        fi
         ;;
 esac
 

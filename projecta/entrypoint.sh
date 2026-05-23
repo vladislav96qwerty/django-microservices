@@ -29,6 +29,18 @@ case "$1" in
 
         echo "Collecting static files..."
         python manage.py collectstatic --noinput || true
+
+        # One-shot bootstrap controlled by env var BOOTSTRAP=1.
+        # Set this in Render Environment for the first deploy, then unset.
+        if [ "$BOOTSTRAP" = "1" ]; then
+            echo "==> BOOTSTRAP=1: loading initial fixtures (idempotent)..."
+            python manage.py loaddata initial_data || echo "  (fixture skipped — likely already loaded)"
+
+            if [ -n "$DJANGO_SUPERUSER_PASSWORD" ] && [ -n "$DJANGO_SUPERUSER_USERNAME" ]; then
+                echo "==> BOOTSTRAP=1: ensuring superuser '$DJANGO_SUPERUSER_USERNAME' exists..."
+                python manage.py createsuperuser --noinput || echo "  (superuser already exists)"
+            fi
+        fi
         ;;
 esac
 
