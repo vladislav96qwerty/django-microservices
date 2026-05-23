@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Order, OrderStatus
+from .permissions import IsOrderOwner
 from .serializers import CreateOrderSerializer, OrderSerializer
 
 
@@ -12,7 +13,7 @@ class OrderViewSet(
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, IsOrderOwner)
 
     def get_queryset(self):
         return (

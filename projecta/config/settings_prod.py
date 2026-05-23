@@ -20,10 +20,17 @@ SECRET_KEY = env("PROJECTA_SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("PROJECTA_SECRET_KEY must be set in production.")
 
-# Render sets RENDER_EXTERNAL_HOSTNAME automatically; add custom hosts via env.
+# Render sets RENDER_EXTERNAL_HOSTNAME; Railway sets RAILWAY_PUBLIC_DOMAIN /
+# RAILWAY_PRIVATE_DOMAIN automatically.
 RENDER_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", "")
+RAILWAY_HOSTNAME = env("RAILWAY_PUBLIC_DOMAIN", "")
+RAILWAY_PRIVATE = env("RAILWAY_PRIVATE_DOMAIN", "")
 EXTRA_HOSTS = [h.strip() for h in env("PROJECTA_ALLOWED_HOSTS", "").split(",") if h.strip()]
-ALLOWED_HOSTS = list({RENDER_HOSTNAME, *EXTRA_HOSTS, ".onrender.com"} - {""})
+ALLOWED_HOSTS = list(
+    {RENDER_HOSTNAME, RAILWAY_HOSTNAME, RAILWAY_PRIVATE, *EXTRA_HOSTS,
+     ".onrender.com", ".up.railway.app", ".railway.app"}
+    - {""}
+)
 
 # ---------------------------------------------------------------------------
 # Database — parse Render's DATABASE_URL
@@ -67,9 +74,16 @@ CELERY_REDIS_BACKEND_USE_SSL = CELERY_BROKER_USE_SSL
 # Inter-service: where to reach ProjectB
 # ---------------------------------------------------------------------------
 PROJECTB_HOST = env("PROJECTB_HOST", "")
-PROJECTB_INTERNAL_URL = (
-    f"https://{PROJECTB_HOST}" if PROJECTB_HOST else env("PROJECTB_INTERNAL_URL", "")
-)
+_explicit_b_url = env("PROJECTB_INTERNAL_URL", "")
+if _explicit_b_url:
+    PROJECTB_INTERNAL_URL = _explicit_b_url
+elif PROJECTB_HOST:
+    # Railway internal traffic is http on the private domain (port 8080 by
+    # default in Nixpacks); Render/external is https.
+    scheme = "http" if PROJECTB_HOST.endswith(".railway.internal") else "https"
+    PROJECTB_INTERNAL_URL = f"{scheme}://{PROJECTB_HOST}"
+else:
+    PROJECTB_INTERNAL_URL = ""
 
 # ---------------------------------------------------------------------------
 # Static files (WhiteNoise serves them in front of Render's edge)

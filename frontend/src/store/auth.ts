@@ -12,7 +12,7 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User | null) => void;
   fetchProfile: () => Promise<void>;
@@ -46,7 +46,23 @@ export const useAuthStore = create<AuthState>()(
         await axios.post(`${baseURL}/auth/register/`, payload);
         await get().login(payload.username, payload.password);
       },
-      logout: () => set({ access: null, refresh: null, user: null, isAuthenticated: false }),
+      logout: async () => {
+        const refresh = get().refresh;
+        const access = get().access;
+        if (refresh && access) {
+          try {
+            await axios.post(
+              `${baseURL}/auth/logout/`,
+              { refresh },
+              { headers: { Authorization: `Bearer ${access}` } },
+            );
+          } catch {
+            // Even if the server rejects (already-blacklisted, expired) we
+            // still clear local state below.
+          }
+        }
+        set({ access: null, refresh: null, user: null, isAuthenticated: false });
+      },
       fetchProfile: async () => {
         const access = get().access;
         if (!access) return;

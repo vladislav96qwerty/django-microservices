@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '@/api/client';
 import { useAuthStore } from '@/store/auth';
 import type { Order, Paginated } from '@/types';
@@ -44,19 +45,21 @@ export default function ProfilePage() {
         ) : (
           <ul className="space-y-3">
             {orders.map((order) => (
-              <li key={order.id} className="card p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-semibold">Order #{order.id}</span>
-                  <span className="text-sm uppercase text-gray-500">{order.status}</span>
-                </div>
-                <ul className="text-sm text-gray-700">
-                  {order.items.map((item) => (
-                    <li key={item.id}>
-                      {item.book_title} × {item.quantity} — ${item.subtotal}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-2 font-bold">Total: ${order.total}</div>
+              <li key={order.id} className="card p-4 hover:shadow-md transition">
+                <Link to={`/orders/${order.id}`} className="block">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold">Order #{order.id}</span>
+                    <span className="text-sm uppercase text-gray-500">{order.status}</span>
+                  </div>
+                  <ul className="text-sm text-gray-700">
+                    {order.items.map((item) => (
+                      <li key={item.id}>
+                        {item.book_title} × {item.quantity} — ${item.subtotal}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-2 font-bold">Total: ${order.total}</div>
+                </Link>
               </li>
             ))}
           </ul>

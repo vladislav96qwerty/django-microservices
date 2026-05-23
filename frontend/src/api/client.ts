@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/auth';
+import { useLocaleStore } from '@/i18n';
 
 const baseURL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '/api';
 
@@ -25,10 +26,12 @@ async function refreshAccessToken(): Promise<string | null> {
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const access = useAuthStore.getState().access;
+  const lang = useLocaleStore.getState().lang;
+  config.headers = config.headers ?? {};
   if (access) {
-    config.headers = config.headers ?? {};
     (config.headers as Record<string, string>)['Authorization'] = `Bearer ${access}`;
   }
+  (config.headers as Record<string, string>)['Accept-Language'] = lang;
   return config;
 });
 

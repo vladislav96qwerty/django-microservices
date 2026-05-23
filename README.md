@@ -49,6 +49,22 @@ Create a superuser for ProjectA:
 docker compose exec projecta python manage.py createsuperuser
 ```
 
+Load sample books / authors / categories:
+```bash
+docker compose exec projecta python manage.py loaddata initial_data
+```
+
+Compile translations (English + Ukrainian) — only needed once locally:
+```bash
+docker compose exec projecta python manage.py compilemessages
+```
+(The Dockerfile already runs `compilemessages` in the entrypoint, so this is only useful when developing outside Docker.)
+
+## Deployment
+
+* **Railway** — see [`RAILWAY.md`](RAILWAY.md) for the step-by-step Blueprint.
+* **Render** — see `render.yaml` (auto-detected by Render).
+
 ## Tests
 
 ProjectA:

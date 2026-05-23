@@ -8,6 +8,7 @@ import CheckoutPage from '@/pages/Checkout';
 import LoginPage from '@/pages/Login';
 import RegisterPage from '@/pages/Register';
 import ProfilePage from '@/pages/Profile';
+import OrderDetailPage from '@/pages/OrderDetail';
 
 export default function App() {
   return (
@@ -33,6 +34,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetailPage />
               </ProtectedRoute>
             }
           />

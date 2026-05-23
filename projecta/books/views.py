@@ -4,6 +4,8 @@ from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from orders.permissions import IsReviewAuthorOrReadOnly
+
 from .models import Author, Book, Category, Review
 from .serializers import (
     AuthorSerializer,
@@ -79,7 +81,10 @@ class BookViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.select_related("user", "book")
     serializer_class = ReviewSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsReviewAuthorOrReadOnly,
+    )
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

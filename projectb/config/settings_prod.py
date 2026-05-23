@@ -17,8 +17,14 @@ if not SECRET_KEY:
     raise RuntimeError("PROJECTB_SECRET_KEY must be set in production.")
 
 RENDER_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", "")
+RAILWAY_HOSTNAME = env("RAILWAY_PUBLIC_DOMAIN", "")
+RAILWAY_PRIVATE = env("RAILWAY_PRIVATE_DOMAIN", "")
 EXTRA_HOSTS = [h.strip() for h in env("PROJECTB_ALLOWED_HOSTS", "").split(",") if h.strip()]
-ALLOWED_HOSTS = list({RENDER_HOSTNAME, *EXTRA_HOSTS, ".onrender.com"} - {""})
+ALLOWED_HOSTS = list(
+    {RENDER_HOSTNAME, RAILWAY_HOSTNAME, RAILWAY_PRIVATE, *EXTRA_HOSTS,
+     ".onrender.com", ".up.railway.app", ".railway.app"}
+    - {""}
+)
 
 # ---------------------------------------------------------------------------
 # Database
@@ -62,9 +68,14 @@ CELERY_REDIS_BACKEND_USE_SSL = CELERY_BROKER_USE_SSL
 # Inter-service: where to reach ProjectA
 # ---------------------------------------------------------------------------
 PROJECTA_HOST = env("PROJECTA_HOST", "")
-PROJECTA_INTERNAL_URL = (
-    f"https://{PROJECTA_HOST}" if PROJECTA_HOST else env("PROJECTA_INTERNAL_URL", "")
-)
+_explicit_a_url = env("PROJECTA_INTERNAL_URL", "")
+if _explicit_a_url:
+    PROJECTA_INTERNAL_URL = _explicit_a_url
+elif PROJECTA_HOST:
+    scheme = "http" if PROJECTA_HOST.endswith(".railway.internal") else "https"
+    PROJECTA_INTERNAL_URL = f"{scheme}://{PROJECTA_HOST}"
+else:
+    PROJECTA_INTERNAL_URL = ""
 
 LOW_STOCK_THRESHOLD = int(env("LOW_STOCK_THRESHOLD", "10"))
 

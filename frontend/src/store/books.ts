@@ -8,9 +8,14 @@ interface BooksState {
   loading: boolean;
   current: BookDetail | null;
   search: string;
+  page: number;
+  pageSize: number;
+  hasNext: boolean;
+  hasPrev: boolean;
   fetchBooks: (params?: Record<string, string>) => Promise<void>;
   fetchBook: (slug: string) => Promise<void>;
   setSearch: (q: string) => void;
+  setPage: (page: number) => void;
 }
 
 export const useBooksStore = create<BooksState>((set, get) => ({
@@ -19,15 +24,25 @@ export const useBooksStore = create<BooksState>((set, get) => ({
   loading: false,
   current: null,
   search: '',
-  setSearch: (q) => set({ search: q }),
+  page: 1,
+  pageSize: 20,
+  hasNext: false,
+  hasPrev: false,
+  setSearch: (q) => set({ search: q, page: 1 }),
+  setPage: (page) => set({ page }),
   fetchBooks: async (params) => {
     set({ loading: true });
     try {
-      const query: Record<string, string> = { ...(params ?? {}) };
-      const search = get().search;
+      const { page, search } = get();
+      const query: Record<string, string> = { ...(params ?? {}), page: String(page) };
       if (search) query.search = search;
       const { data } = await api.get<Paginated<BookListItem>>('/books/', { params: query });
-      set({ list: data.results, count: data.count });
+      set({
+        list: data.results,
+        count: data.count,
+        hasNext: data.next !== null,
+        hasPrev: data.previous !== null,
+      });
     } finally {
       set({ loading: false });
     }

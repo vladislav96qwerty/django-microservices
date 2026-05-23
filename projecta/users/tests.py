@@ -80,6 +80,37 @@ class TestProfile:
         assert resp.data["first_name"] == "Alice"
 
 
+class TestLogout:
+    def test_logout_blacklists_refresh_token(self, api_client, user):
+        login_url = reverse("login")
+        login_resp = api_client.post(
+            login_url, {"username": "alice", "password": "StrongPass!234"}
+        )
+        assert login_resp.status_code == 200
+        access = login_resp.data["access"]
+        refresh = login_resp.data["refresh"]
+
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {access}")
+        logout_url = reverse("logout")
+        resp = api_client.post(logout_url, {"refresh": refresh}, format="json")
+        assert resp.status_code == 205
+
+        # Same refresh token should now be rejected
+        refresh_url = reverse("token_refresh")
+        retry = api_client.post(refresh_url, {"refresh": refresh}, format="json")
+        assert retry.status_code == 401
+
+    def test_logout_requires_refresh(self, auth_client):
+        url = reverse("logout")
+        resp = auth_client.post(url, {}, format="json")
+        assert resp.status_code == 400
+
+    def test_logout_rejects_bad_token(self, auth_client):
+        url = reverse("logout")
+        resp = auth_client.post(url, {"refresh": "not-a-token"}, format="json")
+        assert resp.status_code == 400
+
+
 class TestChangePassword:
     def test_change_password_ok(self, auth_client):
         url = reverse("change_password")
