@@ -1,0 +1,300 @@
+# Render Blueprint — Django Microservices (Bookshop + Warehouse + React)
+#
+# Deploys two Django services, their Celery workers + beat schedulers, two
+# Postgres databases, two Redis instances, and the React frontend as a static
+# site. Cross-service env vars are wired through `fromService` / `fromDatabase`
+# so you don't have to copy-paste connection strings.
+#
+# Caveats:
+# 1. After the first deploy, copy projecta's public URL into the frontend's
+#    VITE_API_BASE_URL (marked sync:false below) and trigger a manual deploy
+#    of the static site.
+# 2. JWT signing key must match between projecta and projectb so the services
+#    can verify each other's tokens; both reference the same envVarGroup.
+
+databases:
+  - name: projecta-db
+    plan: starter
+    databaseName: bookshop
+    user: bookshop
+    postgresMajorVersion: "16"
+
+  - name: projectb-db
+    plan: starter
+    databaseName: warehouse
+    user: warehouse
+    postgresMajorVersion: "16"
+
+envVarGroups:
+  - name: jwt-shared
+    envVars:
+      - key: JWT_SIGNING_KEY
+        generateValue: true
+      - key: JWT_ACCESS_TOKEN_LIFETIME
+        value: "60"
+      - key: JWT_REFRESH_TOKEN_LIFETIME
+        value: "1440"
+
+services:
+  # ------------------------------------------------------------------
+  # Redis instances (one per service for isolation)
+  # ------------------------------------------------------------------
+  - type: redis
+    name: projecta-redis
+    plan: starter
+    ipAllowList: []
+    maxmemoryPolicy: allkeys-lru
+
+  - type: redis
+    name: projectb-redis
+    plan: starter
+    ipAllowList: []
+    maxmemoryPolicy: allkeys-lru
+
+  # ------------------------------------------------------------------
+  # ProjectA — Bookshop (Django + DRF)
+  # ------------------------------------------------------------------
+  - type: web
+    name: projecta
+    runtime: python
+    plan: starter
+    rootDir: projecta
+    region: oregon
+    healthCheckPath: /health/
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application --workers 3 --bind 0.0.0.0:$PORT --access-logfile - --error-logfile -
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: WEB_CONCURRENCY
+        value: "3"
+      - key: PROJECTA_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: projecta-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: projecta-redis
+          property: connectionString
+      - key: PROJECTB_HOST
+        fromService:
+          type: web
+          name: projectb
+          property: host
+      - fromGroup: jwt-shared
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false        # set to the deployed frontend URL after first deploy
+      - key: PROJECTA_SENTRY_DSN
+        sync: false
+      - key: SENTRY_ENVIRONMENT
+        value: production
+
+  - type: worker
+    name: projecta-celery
+    runtime: python
+    plan: starter
+    rootDir: projecta
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A config worker -l info --concurrency=2
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: PROJECTA_SECRET_KEY
+        fromService:
+          type: web
+          name: projecta
+          envVarKey: PROJECTA_SECRET_KEY
+      - key: DATABASE_URL
+        fromDatabase:
+          name: projecta-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: projecta-redis
+          property: connectionString
+      - key: PROJECTB_HOST
+        fromService:
+          type: web
+          name: projectb
+          property: host
+      - fromGroup: jwt-shared
+
+  - type: worker
+    name: projecta-celery-beat
+    runtime: python
+    plan: starter
+    rootDir: projecta
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A config beat -l info
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: PROJECTA_SECRET_KEY
+        fromService:
+          type: web
+          name: projecta
+          envVarKey: PROJECTA_SECRET_KEY
+      - key: DATABASE_URL
+        fromDatabase:
+          name: projecta-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: projecta-redis
+          property: connectionString
+      - fromGroup: jwt-shared
+
+  # ------------------------------------------------------------------
+  # ProjectB — Warehouse (Django + DRF)
+  # ------------------------------------------------------------------
+  - type: web
+    name: projectb
+    runtime: python
+    plan: starter
+    rootDir: projectb
+    region: oregon
+    healthCheckPath: /health/
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application --workers 3 --bind 0.0.0.0:$PORT --access-logfile - --error-logfile -
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: WEB_CONCURRENCY
+        value: "3"
+      - key: PROJECTB_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: projectb-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: projectb-redis
+          property: connectionString
+      - key: PROJECTA_HOST
+        fromService:
+          type: web
+          name: projecta
+          property: host
+      - key: LOW_STOCK_THRESHOLD
+        value: "10"
+      - fromGroup: jwt-shared
+      - key: PROJECTB_SENTRY_DSN
+        sync: false
+      - key: SENTRY_ENVIRONMENT
+        value: production
+
+  - type: worker
+    name: projectb-celery
+    runtime: python
+    plan: starter
+    rootDir: projectb
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A config worker -l info --concurrency=2
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: PROJECTB_SECRET_KEY
+        fromService:
+          type: web
+          name: projectb
+          envVarKey: PROJECTB_SECRET_KEY
+      - key: DATABASE_URL
+        fromDatabase:
+          name: projectb-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: projectb-redis
+          property: connectionString
+      - key: PROJECTA_HOST
+        fromService:
+          type: web
+          name: projecta
+          property: host
+      - key: LOW_STOCK_THRESHOLD
+        value: "10"
+      - fromGroup: jwt-shared
+
+  - type: worker
+    name: projectb-celery-beat
+    runtime: python
+    plan: starter
+    rootDir: projectb
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A config beat -l info
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: PROJECTB_SECRET_KEY
+        fromService:
+          type: web
+          name: projectb
+          envVarKey: PROJECTB_SECRET_KEY
+      - key: DATABASE_URL
+        fromDatabase:
+          name: projectb-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: projectb-redis
+          property: connectionString
+      - key: PROJECTA_HOST
+        fromService:
+          type: web
+          name: projecta
+          property: host
+      - key: LOW_STOCK_THRESHOLD
+        value: "10"
+      - fromGroup: jwt-shared
+
+  # ------------------------------------------------------------------
+  # React frontend — static site
+  # ------------------------------------------------------------------
+  - type: web
+    runtime: static
+    name: frontend
+    plan: starter
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    envVars:
+      # Set this to the deployed projecta URL after first deploy, e.g.
+      # https://projecta-xxxx.onrender.com/api
+      - key: VITE_API_BASE_URL
+        sync: false
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: "public, max-age=31536000, immutable"
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
