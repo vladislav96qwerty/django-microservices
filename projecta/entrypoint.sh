@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Waiting for postgres..."
-until python -c "import socket,os,sys; s=socket.socket(); s.settimeout(2);
+# Local docker-compose case: ping the postgres container before migrating.
+# On Render/Railway the DB lives outside the container and DATABASE_URL is set,
+# so we skip the socket ping (the platform guarantees the DB is up).
+if [ -z "$DATABASE_URL" ]; then
+    echo "Waiting for postgres..."
+    until python -c "import socket,os,sys; s=socket.socket(); s.settimeout(2);
 host=os.environ.get('PROJECTA_DB_HOST','postgres_a');
 port=int(os.environ.get('PROJECTA_DB_PORT','5432'));
 sys.exit(0 if s.connect_ex((host,port))==0 else 1)" 2>/dev/null; do
-    sleep 1
-done
-echo "Postgres is up."
+        sleep 1
+    done
+    echo "Postgres is up."
+fi
 
-# Celery containers share this image but only the web container should run
-# migrations / compilemessages / collectstatic. Detect by the launch command.
 case "$1" in
     celery)
-        echo "Celery container detected — skipping migrations & static collection."
-        # Give the web container a head start so migrations finish first.
+        echo "Celery container — skipping migrations & static collection."
         sleep 5
         ;;
     *)
