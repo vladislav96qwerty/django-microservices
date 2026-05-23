@@ -131,6 +131,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Fixtures live at project level (projecta/fixtures/) rather than inside an
+# individual app, so we point Django here explicitly. Otherwise
+# `loaddata initial_data` would only search inside <app>/fixtures/ folders.
+FIXTURE_DIRS = [BASE_DIR / "fixtures"]
+
 # Cache: Redis in dev/prod, in-memory in tests (USE_SQLITE=1 → test mode).
 REDIS_URL = env("PROJECTA_REDIS_URL", "redis://localhost:6379/0")
 if env("USE_SQLITE", "0") == "1":
