@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import (
     ChangePasswordSerializer,
+    LogoutSerializer,
     RegisterSerializer,
     UserSerializer,
 )
@@ -36,6 +37,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 class LogoutView(APIView):
     """Blacklist a refresh token so it cannot be used again."""
 
+    serializer_class = LogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -57,6 +59,7 @@ class LogoutView(APIView):
 
 
 class ChangePasswordView(APIView):
+    serializer_class = ChangePasswordSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):

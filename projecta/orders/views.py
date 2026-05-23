@@ -14,8 +14,14 @@ class OrderViewSet(
     viewsets.GenericViewSet,
 ):
     permission_classes = (permissions.IsAuthenticated, IsOrderOwner)
+    # drf-spectacular calls get_queryset() during schema generation with an
+    # AnonymousUser, which breaks our user filter. The empty fallback lets
+    # the schema introspect the model without exploding.
+    queryset = Order.objects.none()
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Order.objects.none()
         return (
             Order.objects.filter(user=self.request.user)
             .prefetch_related("items__book")

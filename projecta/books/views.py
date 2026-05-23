@@ -1,7 +1,6 @@
 from django.core.cache import cache
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from orders.permissions import IsReviewAuthorOrReadOnly
@@ -78,13 +77,6 @@ class BookViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         super().perform_destroy(instance)
         self._invalidate_list_cache()
-
-    @action(detail=True, methods=["get"])
-    def reviews(self, request, slug=None):
-        book = self.get_object()
-        qs = book.reviews.select_related("user").all()
-        return Response(ReviewSerializer(qs, many=True).data)
-
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.select_related("user", "book")

@@ -80,7 +80,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
-    def get_average_rating(self, obj):
+    def get_average_rating(self, obj) -> float | None:
         ratings = [r.rating for r in obj.reviews.all()]
         return round(sum(ratings) / len(ratings), 2) if ratings else None
 

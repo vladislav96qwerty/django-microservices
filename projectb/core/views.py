@@ -3,6 +3,7 @@ import logging
 import redis
 from django.conf import settings
 from django.db import connection
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -31,6 +32,14 @@ def _check_redis() -> bool:
         return False
 
 
+@extend_schema(
+    summary="Service health check",
+    description="Pings the database and Redis and reports their status.",
+    responses={
+        200: OpenApiResponse(description="All checks passed"),
+        503: OpenApiResponse(description="One or more checks failed"),
+    },
+)
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def health(request):
